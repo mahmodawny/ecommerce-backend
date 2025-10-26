@@ -1,27 +1,33 @@
 import express from "express";
 import "reflect-metadata";
-import { createConnection } from "typeorm";
+import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const app = express();
-
-app.use(express.json());
-
-// إنشاء الاتصال بقاعدة البيانات
-createConnection({
+export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "./src/database.sqlite",
   synchronize: true,
-  entities: ["src/models/*.js"],
-})
+  entities: ["src/models/Product.js", "src/models/Category.js"],
+});
+
+const app = express();
+app.use(express.json());
+
+AppDataSource.initialize()
   .then(() => {
     console.log("✅ Database connected successfully!");
   })
   .catch((error) => console.log("❌ Database connection error:", error));
 
-// الراوت الأساسي
+// routes
+import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+
+app.use("/api/products", productRoutes);
+app.use("/api/categories", categoryRoutes);
+
 app.get("/", (req, res) => {
   res.json({ message: "API is running 🚀" });
 });
