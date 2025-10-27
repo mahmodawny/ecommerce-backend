@@ -1,4 +1,4 @@
-import { AppDataSource } from "../data-source.js";
+import { AppDataSource } from "../app.js";
 import { Cart } from "../models/Cart.js";
 import { Product } from "../models/Product.js";
 
