@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-
+import { Cart } from "./Cart.js";
+import { Order } from "./Order.js"; 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -13,4 +14,7 @@ export class User {
 
   @Column()
   password;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders;
 }

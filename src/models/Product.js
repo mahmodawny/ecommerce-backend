@@ -17,6 +17,7 @@ export const Product = new EntitySchema({
     },
     stock: {
       type: "int",
+      min : 0,
       default: 0,
     },
     created_at: {

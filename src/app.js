@@ -9,7 +9,14 @@ export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "./src/database.sqlite",
   synchronize: true,
-  entities: ["src/models/Product.js", "src/models/Category.js"],
+  entities: [
+    "src/models/Product.js",
+    "src/models/Category.js",
+    "src/models/User.js",
+    "src/models/Cart.js",
+    "src/models/CartItem.js",
+    "src/models/Order.js"
+  ],  
 });
 
 const app = express();
@@ -21,13 +28,18 @@ AppDataSource.initialize()
   })
   .catch((error) => console.log("❌ Database connection error:", error));
 
-// routes
+// ✅ routes
 import productRoutes from "./routes/productRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
+// ✅ test route
 app.get("/", (req, res) => {
   res.json({ message: "API is running 🚀" });
 });
