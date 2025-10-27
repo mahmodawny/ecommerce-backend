@@ -1,24 +1,38 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable } from "typeorm";
-import { Product } from "./Product.js";
+import { EntitySchema } from "typeorm";
 
-@Entity()
-export class Order {
-  @PrimaryGeneratedColumn()
-  id;
-
-  @Column({ type: "varchar", length: 100 })
-  userId;
-
-  @ManyToMany(() => Product)
-  @JoinTable()
-  products;
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  totalAmount;
-
-  @Column({ type: "varchar", length: 50, default: "Pending" })
-  status;
-
-  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-  createdAt;
-}
+export const Order = new EntitySchema({
+  name: "Order",
+  tableName: "orders",
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
+    },
+    userId: {
+      type: "varchar",
+      length: 100,
+    },
+    totalAmount: {
+      type: "decimal",
+      precision: 10,
+      scale: 2,
+    },
+    status: {
+      type: "varchar",
+      length: 50,
+      default: "Pending",
+    },
+    createdAt: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
+  },
+  relations: {
+    products: {
+      target: "Product",
+      type: "many-to-many",
+      joinTable: true,
+    },
+  },
+});

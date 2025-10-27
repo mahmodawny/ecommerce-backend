@@ -1,18 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
-import { User } from "./User.js";
-import { CartItem } from "./CartItem.js";
+import { EntitySchema } from "typeorm";
 
-@Entity()
-export class Cart {
-  @PrimaryGeneratedColumn()
-  id;
-
-  @ManyToOne(() => User, (user) => user.carts, { onDelete: "CASCADE" })
-  user;
-
-  @OneToMany(() => CartItem, (item) => item.cart, { cascade: true })
-  items;
-
-  @Column({ type: "float", default: 0 })
-  total;
-}
+export const Cart = new EntitySchema({
+  name: "Cart",
+  tableName: "carts",
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
+    },
+    userId: {
+      type: "varchar",
+      length: 100,
+    },
+    productId: {
+      type: "int",
+    },
+    quantity: {
+      type: "int",
+      default: 1,
+    },
+    createdAt: {
+      type: "timestamp",
+      default: () => "CURRENT_TIMESTAMP",
+    },
+  },
+});
