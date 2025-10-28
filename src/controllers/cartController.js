@@ -5,55 +5,49 @@ import { Product } from "../models/Product.js";
 const cartRepo = AppDataSource.getRepository(Cart);
 const productRepo = AppDataSource.getRepository(Product);
 
-// 🛒 إضافة منتج إلى الكارت
-export const addToCart = async (req, res) => {
+// 🛒 إنشاء كارت جديد
+export const createCart = async (req, res) => {
   try {
-    const { userId, productId, quantity } = req.body;
+    const { userId, productIds } = req.body;
 
-    // ✅ تحقق إن المنتج موجود
-    const product = await productRepo.findOne({ where: { id: productId } });
-    if (!product) return res.status(404).json({ error: "Product not found" });
+    const products = await productRepo.findByIds(productIds);
+    const totalPrice = products.reduce((sum, p) => sum + Number(p.price), 0);
 
-    // ✅ إنشاء كارت جديد
-    const cart = cartRepo.create({
-      userId,
-      product,
-      quantity: quantity || 1,
-    });
-
+    const cart = cartRepo.create({ userId, products, totalPrice });
     await cartRepo.save(cart);
+
     res.status(201).json(cart);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error adding to cart" });
+    res.status(500).json({ error: "Error creating cart" });
   }
 };
 
-// 📦 عرض كل الكروت
+// 📦 عرض جميع الكارتات
 export const getCarts = async (req, res) => {
   try {
-    const carts = await cartRepo.find({ relations: ["product"] });
+    const carts = await cartRepo.find({ relations: ["products"] });
     res.json(carts);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error fetching carts" });
   }
 };
 
-// 🧮 تحديث كمية منتج في الكارت
+// 🧮 تحديث كارت
 export const updateCart = async (req, res) => {
   try {
     const { id } = req.params;
-    const { quantity } = req.body;
+    const { productIds } = req.body;
 
-    const cart = await cartRepo.findOne({ where: { id }, relations: ["product"] });
+    const cart = await cartRepo.findOne({ where: { id }, relations: ["products"] });
     if (!cart) return res.status(404).json({ error: "Cart not found" });
 
-    cart.quantity = quantity || cart.quantity;
+    const products = await productRepo.findByIds(productIds);
+    cart.products = products;
+    cart.totalPrice = products.reduce((sum, p) => sum + Number(p.price), 0);
+
     await cartRepo.save(cart);
     res.json(cart);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error updating cart" });
   }
 };
@@ -62,12 +56,9 @@ export const updateCart = async (req, res) => {
 export const deleteCart = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await cartRepo.delete(id);
-    if (result.affected === 0) return res.status(404).json({ error: "Cart not found" });
-
+    await cartRepo.delete(id);
     res.json({ message: "Cart deleted successfully" });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Error deleting cart" });
   }
 };
