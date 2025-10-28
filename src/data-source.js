@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { Product } from "./entities/Product.js";
-import { Category } from "./entities/Category.js";
-import { Cart } from "./entities/Cart.js";
-import { Order } from "./entities/Order.js";
+import { Product } from "./models/Product.js";
+import { Category } from "./models/Category.js";
+import { Cart } from "./models/Cart.js";
+import { Order } from "./models/Order.js";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
