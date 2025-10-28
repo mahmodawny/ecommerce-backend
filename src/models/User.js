@@ -1,20 +1,32 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { Order } from "./Order.js";
+import { EntitySchema } from "typeorm";
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id;
-
-  @Column({ type: "varchar" })
-  name;
-
-  @Column({ unique: true })
-  email;
-
-  @Column()
-  password;
-
-  @OneToMany(() => Order, (order) => order.user)
-  orders;
-}
+export const User = new EntitySchema({
+  name: "User",
+  tableName: "users",
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
+    },
+    username: {
+      type: "varchar",
+      length: 100,
+    },
+    email: {
+      type: "varchar",
+      unique: true,
+    },
+    password: {
+      type: "varchar",
+    },
+    isAdmin: {
+      type: "boolean",
+      default: false,
+    },
+    created_at: {
+      type: "datetime",
+      createDate: true,
+    },
+  },
+});
