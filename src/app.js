@@ -3,43 +3,42 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 
+import { Product } from "./models/Product.js";
+import { Category } from "./models/Category.js";
+import { User } from "./models/User.js";
+import { Cart } from "./models/Cart.js";
+import { CartItem } from "./models/CartItem.js";
+import { Order } from "./models/Order.js";
+
+import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+
 dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "./src/database.sqlite",
   synchronize: true,
-  entities: [
-    "src/models/Product.js",
-    "src/models/Category.js",
-    "src/models/User.js",
-    "src/models/Cart.js",
-    "src/models/CartItem.js",
-    "src/models/Order.js"
-  ],  
+  entities: [Product, Category, User, Cart, CartItem, Order],
 });
 
 const app = express();
 app.use(express.json());
 
+// ✅ Connect to database
 AppDataSource.initialize()
-  .then(() => {
-    console.log("✅ Database connected successfully!");
-  })
+  .then(() => console.log("✅ Database connected successfully!"))
   .catch((error) => console.log("❌ Database connection error:", error));
 
-// ✅ routes
-import productRoutes from "./routes/productRoutes.js";
-import categoryRoutes from "./routes/categoryRoutes.js";
-import cartRoutes from "./routes/cartRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-
+// ✅ Routes
 app.use("/api/products", productRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
 
-// ✅ test route
+// ✅ Test route
 app.get("/", (req, res) => {
   res.json({ message: "API is running 🚀" });
 });
