@@ -17,6 +17,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
+// ✅ Database connection
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: "./src/database.sqlite",
@@ -27,7 +28,7 @@ export const AppDataSource = new DataSource({
 const app = express();
 app.use(express.json());
 
-// ✅ Connect to database
+// ✅ Initialize Database
 AppDataSource.initialize()
   .then(() => console.log("✅ Database connected successfully!"))
   .catch((error) => console.log("❌ Database connection error:", error));

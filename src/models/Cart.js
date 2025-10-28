@@ -6,23 +6,27 @@ export const Cart = new EntitySchema({
   columns: {
     id: {
       primary: true,
-      type: "int",
+      type: "integer",
       generated: true,
     },
     userId: {
       type: "varchar",
       length: 100,
     },
-    productId: {
-      type: "int",
-    },
     quantity: {
-      type: "int",
+      type: "integer",
       default: 1,
     },
     createdAt: {
-      type: "timestamp",
+      type: "datetime", 
       default: () => "CURRENT_TIMESTAMP",
+    },
+  },
+  relations: {
+    product: {
+      target: "Product",
+      type: "many-to-one",
+      joinColumn: true,
     },
   },
 });

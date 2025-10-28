@@ -18,7 +18,7 @@ export const Category = new EntitySchema({
       nullable: true,
     },
     created_at: {
-      type: "datetime",
+      type: "datetime", 
       createDate: true,
     },
     updated_at: {
@@ -28,9 +28,9 @@ export const Category = new EntitySchema({
   },
   relations: {
     products: {
-      target: "Product",
+      target: "Product",   
       type: "one-to-many",
-      inverseSide: "category",
+      inverseSide: "category", 
     },
   },
 });

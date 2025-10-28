@@ -6,7 +6,7 @@ export const Order = new EntitySchema({
   columns: {
     id: {
       primary: true,
-      type: "int",
+      type: "integer", // 👈 SQLite بيستخدم integer مش int
       generated: true,
     },
     userId: {
@@ -24,7 +24,7 @@ export const Order = new EntitySchema({
       default: "Pending",
     },
     createdAt: {
-      type: "timestamp",
+      type: "datetime",
       default: () => "CURRENT_TIMESTAMP",
     },
   },

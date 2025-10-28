@@ -1,12 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
-import { Cart } from "./Cart.js";
-import { Order } from "./Order.js"; 
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Order } from "./Order.js";
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id;
 
-  @Column()
+  @Column({ type: "varchar" })
   name;
 
   @Column({ unique: true })
