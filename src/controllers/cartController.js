@@ -2,13 +2,13 @@ import { AppDataSource } from "../app.js";
 import { Cart } from "../models/Cart.js";
 import { Product } from "../models/Product.js";
 
-const cartRepo = AppDataSource.getRepository(Cart);
-const productRepo = AppDataSource.getRepository(Product);
-
 // 🛒 إنشاء كارت جديد
 export const createCart = async (req, res) => {
   try {
     const { userId, productIds } = req.body;
+
+    const cartRepo = AppDataSource.getRepository(Cart);
+    const productRepo = AppDataSource.getRepository(Product);
 
     const products = await productRepo.findByIds(productIds);
     const totalPrice = products.reduce((sum, p) => sum + Number(p.price), 0);
@@ -25,6 +25,7 @@ export const createCart = async (req, res) => {
 // 📦 عرض جميع الكارتات
 export const getCarts = async (req, res) => {
   try {
+    const cartRepo = AppDataSource.getRepository(Cart);
     const carts = await cartRepo.find({ relations: ["products"] });
     res.json(carts);
   } catch (error) {
@@ -37,6 +38,9 @@ export const updateCart = async (req, res) => {
   try {
     const { id } = req.params;
     const { productIds } = req.body;
+
+    const cartRepo = AppDataSource.getRepository(Cart);
+    const productRepo = AppDataSource.getRepository(Product);
 
     const cart = await cartRepo.findOne({ where: { id }, relations: ["products"] });
     if (!cart) return res.status(404).json({ error: "Cart not found" });
@@ -56,6 +60,7 @@ export const updateCart = async (req, res) => {
 export const deleteCart = async (req, res) => {
   try {
     const { id } = req.params;
+    const cartRepo = AppDataSource.getRepository(Cart);
     await cartRepo.delete(id);
     res.json({ message: "Cart deleted successfully" });
   } catch (error) {
